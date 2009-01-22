@@ -1,5 +1,9 @@
 #include "trimage.h"
 
+/* Render a single triangle.
+ *
+ * Renders the TiTriangle t to the Cairo context cr.
+ */
 void
 ti_render_triangle (cairo_t *cr, const TiTriangle *t)
 {
@@ -11,6 +15,10 @@ ti_render_triangle (cairo_t *cr, const TiTriangle *t)
   cairo_fill (cr);
 }
 
+/* Render a list of triangles.
+ *
+ * Renders a list of TiTriangles to the Cairo context cr.
+ */
 void
 ti_render_list (cairo_t *cr, GList *triangles)
 {
@@ -21,6 +29,10 @@ ti_render_list (cairo_t *cr, GList *triangles)
   }
 }
 
+/* Clear a Cairo context to black.
+ *
+ * Fills the Cairo context cr with uniform opaque black.
+ */
 void
 ti_render_clear (cairo_t *cr)
 {
@@ -29,6 +41,11 @@ ti_render_clear (cairo_t *cr)
   cairo_paint (cr);
 }
 
+/* Render a list of triangles directly to SVG.
+ *
+ * Renders the list of TiTriangles triangles to filename as an SVG
+ * image with the given width and height in points.
+ */
 void
 ti_render_to_svg (const char *filename, GList *triangles,
                   double width, double height)
@@ -46,7 +63,11 @@ ti_render_to_svg (const char *filename, GList *triangles,
   cairo_surface_destroy (surface);
 }
 
-
+/* Render a list of triangles directly to PNG.
+ *
+ * Renders the list of TiTriangles triangles to filename as an PNG
+ * image with the given width and height in pixels.
+ */
 void
 ti_render_to_png (const char *filename, GList *triangles,
                   int width, int height)
