@@ -27,4 +27,6 @@ void ti_render_to_svg (const char *filename, GList *triangles,
 void ti_render_to_png (const char *filename, GList *triangles,
                                  int width, int height);
 
+double objective (cairo_surface_t *reference, cairo_surface_t *trial);
+
 #endif /* !_TRIMAGE_H_ */
