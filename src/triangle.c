@@ -72,6 +72,26 @@ ti_triangle_unref (TiTriangle *x)
   if (x->refcount <= 0) g_free (x);
 }
 
+/* Test if two triangles are equal.
+ *
+ * Compares the TiTriangles a and b, and returns non-zero if they are
+ * equal. If they differ, returns 0.
+ */
+int
+ti_triangle_equal (TiTriangle *a, TiTriangle *b)
+{
+  int i;
+  if (a == b) return 1;
+
+  /* Horrible, horrible hack */
+  for (i = 0; i < 10; i++) {
+    double *x = (double *) a;
+    double *y = (double *) b;
+    if (x[i] != y[i]) return 0;
+  }
+  return 1;
+}
+
 /* Create a list of randomised triangles.
  *
  * Returns a list of new randomised TiTriangles. The list should be
