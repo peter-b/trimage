@@ -1,0 +1,9 @@
+
+To regenerate build system:
+
+   autoreconf
+
+
+To compile:
+
+   ./configure && make
