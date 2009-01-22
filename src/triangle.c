@@ -3,19 +3,21 @@
 /* Create a new triangle.
  *
  * Returns a new TiTriangle with all parameters set to 0. The returned
- * TiTriangle must be freed with ti_triangle_free() when no longer
+ * TiTriangle must be freed with ti_triangle_unref() when no longer
  * needed.
  */
 TiTriangle *
 ti_triangle_new ()
 {
-  return g_new0 (TiTriangle, 1);
+  TiTriangle *t = g_new0 (TiTriangle, 1);
+  t->refcount = 1;
+  return t;
 }
 
 /* Create a new randomised triangle.
  *
  * Returns a new TiTriangle with all parameters randomised. The
- * returned TiTriangle must be freed with ti_triangle_free() when no
+ * returned TiTriangle must be freed with ti_triangle_unref() when no
  * longer needed.
  */
 TiTriangle *
@@ -36,23 +38,38 @@ ti_triangle_new_random ()
 /* Copy a TiTriangle.
  *
  * Returns a new TiTriangle with the same parameters as x. The
- * returned TiTriangle must be freed with ti_triangle_free() when no
+ * returned TiTriangle must be freed with ti_triangle_unref() when no
  * longer needed.
  */
 TiTriangle *
 ti_triangle_copy (const TiTriangle *x)
 {
-  return (TiTriangle *) g_memdup (x, sizeof (TiTriangle));
+  TiTriangle *t =
+    (TiTriangle *) g_memdup (x, sizeof (TiTriangle));
+  t->refcount = 1;
+  return t;
 }
 
-/* Free a TiTriangle.
+/* Reference a TiTriangle.
  *
- * The triangle x is destroyed and all its resources freed.
+ * Increment the reference count of the triangle x.
  */
 void
-ti_triangle_free (TiTriangle *x)
+ti_triangle_ref (TiTriangle *x)
 {
-  g_free (x);
+  x->refcount++;
+}
+
+/* Unreference a TiTriangle.
+ *
+ * Decrements the reference count of the triangle x. If the refcount
+ * has reached zero, x is destroyed and all its resources freed.
+ */
+void
+ti_triangle_unref (TiTriangle *x)
+{
+  x->refcount--;
+  if (x->refcount <= 0) g_free (x);
 }
 
 /* Create a list of randomised triangles.
@@ -74,14 +91,14 @@ ti_triangle_random_list (int len) {
 /* Free a list of triangles.
  *
  * Destroys a list of TiTriangles, freeing the resources used by the
- * list and all of the TiTriangles in it.
+ * list and unrefing all of the TiTriangles in it.
  */
 void
 ti_triangle_free_list (GList *lst)
 {
   GList *iter = lst;
   while (iter != NULL) {
-    ti_triangle_free (iter->data);
+    ti_triangle_unref (iter->data);
     iter = g_list_next (iter);
   }
   g_list_free (lst);

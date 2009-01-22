@@ -9,12 +9,14 @@ typedef struct {
   double x2, y2;
   double x3, y3;
   double r, g, b, a;
+  int refcount;
 } TiTriangle;
 
 TiTriangle *triangle_new ();
 TiTriangle *triangle_new_random ();
 TiTriangle *triangle_copy (const TiTriangle *x);
-void ti_triangle_free (TiTriangle *x);
+void ti_triangle_ref (TiTriangle *x);
+void ti_triangle_unref (TiTriangle *x);
 
 GList *ti_triangle_random_list (int len);
 void ti_triangle_free_list (GList *lst);
