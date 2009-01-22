@@ -2,6 +2,7 @@ noinst_LIBRARIES = libtrimage.a
 
 libtrimage_a_SOURCES = \
 	trimage.h \
+	breed.c \
 	objective.c \
 	triangle.c \
 	render.c

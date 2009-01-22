@@ -31,4 +31,7 @@ void ti_render_to_png (const char *filename, GList *triangles,
 
 double objective (cairo_surface_t *reference, cairo_surface_t *trial);
 
+void ti_crossover (GList *parentA, GList *parentB,
+                   GList **childA, GList **childB);
+
 #endif /* !_TRIMAGE_H_ */
