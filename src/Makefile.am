@@ -13,4 +13,4 @@ pngtest_SOURCES = \
 	pngtest.c
 
 svgtest_SOURCES = \
-	pngtest.c
+	svgtest.c
