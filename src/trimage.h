@@ -20,6 +20,7 @@ void ti_triangle_unref (TiTriangle *x);
 
 GList *ti_triangle_random_list (int len);
 void ti_triangle_free_list (GList *lst);
+GList *ti_triangle_copy_list (GList *lst);
 
 void ti_render_triangle (cairo_t *cr, const TiTriangle *t);
 void ti_render_list (cairo_t *cr, GList *triangles);

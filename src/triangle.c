@@ -123,3 +123,22 @@ ti_triangle_free_list (GList *lst)
   }
   g_list_free (lst);
 }
+
+/* Copy a list of triangles.
+ *
+ * Copies a list of TiTriangles, incrementing the reference counts of
+ * the individual elements. The returned list should be freed with
+ * ti_triangle_free_list() when no longer needed.
+ */
+GList *
+ti_triangle_copy_list (GList *lst)
+{
+  GList *result = NULL;
+  GList *iter = lst;
+  while (iter != NULL) {
+    ti_triangle_ref (iter->data);
+    result = g_list_prepend (result, iter->data);
+    iter = g_list_next (iter);
+  }
+  return g_list_reverse (result);
+}
