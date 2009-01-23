@@ -1,18 +1,13 @@
 #include "trimage.h"
 
-static GList *
-crossover_copy_n (GList *dest, GList *src, int n)
+static TiTriangleList *
+crossover_copy_n (TiTriangleList *dest, TiTriangleList *src,
+                  int off, int len)
 {
   int i;
-  GList *added = NULL;
-  GList *result = NULL;
-  GList *iter = src;
-  for (i = 0; i < n; i++) {
-    if (iter == NULL) break;
-    ti_triangle_ref (iter->data);
-    added = g_list_prepend (added, iter->data);
+  for (i = off; i < (off+len); i++) {
+    ti_triangle_list_append (dest, src->triangles[i]);
   }
-  return g_list_concat (dest, g_list_reverse (added));
 }
 
 /* Crossover two lists of TiTriangles.
@@ -22,15 +17,15 @@ crossover_copy_n (GList *dest, GList *src, int n)
  * to the new derived triangle lists.
  */
 void
-ti_crossover (GList *parentA, GList *parentB,
-              GList **childA, GList **childB)
+ti_crossover (TiTriangleList *parentA, TiTriangleList *parentB,
+              TiTriangleList **childA, TiTriangleList **childB)
 {
-  int pA_len = g_list_length (parentA);
-  int pB_len = g_list_length (parentB);
+  int pA_len = parentA->len;
+  int pB_len = parentB->len;
   int m_len = MIN(pA_len, pB_len);
 
-  GList *child1 = NULL;
-  GList *child2 = NULL;
+  TiTriangleList *child1 = NULL;
+  TiTriangleList *child2 = NULL;
 
   /* Very simple two-cut algorithm */
   int cutA = g_random_int_range (0, m_len+1);
@@ -38,28 +33,26 @@ ti_crossover (GList *parentA, GList *parentB,
   int min_cut = MIN(cutA,cutB);
   int max_cut = MAX(cutA,cutB);
 
-  child1 = crossover_copy_n (child1, parentA, min_cut);
-  child2 = crossover_copy_n (child2, parentB, min_cut);
+  child1 = crossover_copy_n (child1, parentA, 0, min_cut);
+  child2 = crossover_copy_n (child2, parentB, 0, min_cut);
 
-  child1 = crossover_copy_n (child1, g_list_nth (parentB, min_cut),
+  child1 = crossover_copy_n (child1, parentB, min_cut,
                              max_cut - min_cut);
-  child2 = crossover_copy_n (child2, g_list_nth (parentA, min_cut),
+  child2 = crossover_copy_n (child2, parentA, min_cut,
                              max_cut - min_cut);
 
-  child1 = crossover_copy_n (child1, g_list_nth (parentA, max_cut),
+  child1 = crossover_copy_n (child1, parentA, max_cut,
                              m_len - max_cut);
-  child1 = crossover_copy_n (child2, g_list_nth (parentB, max_cut),
+  child1 = crossover_copy_n (child2, parentB, max_cut,
                              m_len - max_cut);
 
   /* Handle the case where one is longer than the other by just
    * copying from that one */
   int extend_len = MAX(pA_len, pB_len) - m_len;
-  GList *extend_src = (pA_len > pB_len) ? parentA : parentB;
-  child1 = crossover_copy_n (child1, g_list_nth (extend_src, m_len),
-                             extend_len);
+  TiTriangleList *extend_src = (pA_len > pB_len) ? parentA : parentB;
+  child1 = crossover_copy_n (child1, extend_src, m_len, extend_len);
 
-  child2 = crossover_copy_n (child1, g_list_nth (extend_src, m_len),
-                             extend_len);
+  child2 = crossover_copy_n (child1, extend_src, m_len, extend_len);
 
   *childA = child1;
   *childB = child2;
@@ -134,12 +127,12 @@ ti_mutate (TiTriangle *x, double prob)
  * Warning: this function modifies its argument.
  */
 void
-ti_mutate_list (GList *lst, double prob)
+ti_mutate_list (TiTriangleList *lst, double prob)
 {
-  GList *iter = lst;
-  while (iter != NULL) {
-    TiTriangle *old = (TiTriangle *) iter->data;
-    iter->data = ti_mutate (old, prob);
+  int i;
+  for (i = 0; i < lst->len; i++) {
+    TiTriangle *old = lst->triangles[i];
+    lst->triangles[i] = ti_mutate (old, prob);
     ti_triangle_unref (old);
   }
 }

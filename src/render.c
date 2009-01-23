@@ -20,12 +20,11 @@ ti_render_triangle (cairo_t *cr, const TiTriangle *t)
  * Renders a list of TiTriangles to the Cairo context cr.
  */
 void
-ti_render_list (cairo_t *cr, GList *triangles)
+ti_render_list (cairo_t *cr, TiTriangleList *lst)
 {
-  GList *iter = triangles;
-  while (iter != NULL) {
-    ti_render_triangle (cr, (TiTriangle *) iter->data);
-    iter = g_list_next (iter);
+  int i;
+  for (i = 0; i < lst->len; i++) {
+    ti_render_triangle (cr, lst->triangles[i]);
   }
 }
 
@@ -47,7 +46,7 @@ ti_render_clear (cairo_t *cr)
  * image with the given width and height in points.
  */
 void
-ti_render_to_svg (const char *filename, GList *triangles,
+ti_render_to_svg (const char *filename, TiTriangleList *lst,
                   double width, double height)
 {
   cairo_surface_t *surface =
@@ -57,7 +56,7 @@ ti_render_to_svg (const char *filename, GList *triangles,
   cairo_t *cr = cairo_create (surface);
   cairo_scale (cr, width, height);
   ti_render_clear (cr);
-  ti_render_list (cr, triangles);
+  ti_render_list (cr, lst);
 
   cairo_destroy(cr);
   cairo_surface_destroy (surface);
@@ -69,7 +68,7 @@ ti_render_to_svg (const char *filename, GList *triangles,
  * image with the given width and height in pixels.
  */
 void
-ti_render_to_png (const char *filename, GList *triangles,
+ti_render_to_png (const char *filename, TiTriangleList *lst,
                   int width, int height)
 {
   cairo_surface_t *surface =
@@ -80,7 +79,7 @@ ti_render_to_png (const char *filename, GList *triangles,
   cairo_t *cr = cairo_create (surface);
   cairo_scale (cr, width, height);
   ti_render_clear (cr);
-  ti_render_list (cr, triangles);
+  ti_render_list (cr, lst);
 
   cairo_surface_write_to_png (surface, filename);
 

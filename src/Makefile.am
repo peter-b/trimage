@@ -5,6 +5,7 @@ libtrimage_a_SOURCES = \
 	breed.c \
 	objective.c \
 	triangle.c \
+	trianglelist.c \
 	render.c
 
 LDADD = libtrimage.a

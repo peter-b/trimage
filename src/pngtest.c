@@ -7,8 +7,8 @@ main (int argc, char** argv)
   if (argc > 1) {
     filename = argv[1];
   }
-  GList *tris = ti_triangle_random_list (50);
+  TiTriangleList *tris = ti_triangle_list_new_random (50);
   ti_render_to_png (filename, tris, 400, 400);
-  ti_triangle_free_list (tris);
+  ti_triangle_list_unref (tris);
   return 0;
 }
