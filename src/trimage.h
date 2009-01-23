@@ -19,6 +19,11 @@ typedef struct {
   int refcount;
 } TiTriangleList;
 
+typedef struct {
+  TiTriangleList *lst;
+  double obj;
+} TiArchiveEntry;
+
 TiTriangle *triangle_new ();
 TiTriangle *triangle_new_random ();
 TiTriangle *triangle_copy (const TiTriangle *x);
@@ -46,5 +51,8 @@ void ti_crossover (TiTriangleList *parentA, TiTriangleList *parentB,
                    TiTriangleList **childA, TiTriangleList **childB);
 TiTriangle *ti_mutate (TiTriangle *x, double prob);
 void ti_mutate_list (TiTriangleList *lst, double prob);
+
+GList *ti_archive_update(GList *archive, TiTriangleList *cand, double obj,
+                         double dis, double sim, int max_len, int *success);
 
 #endif /* !_TRIMAGE_H_ */
