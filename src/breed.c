@@ -136,3 +136,66 @@ ti_mutate_list (TiTriangleList *lst, double prob)
     ti_triangle_unref (old);
   }
 }
+
+/* Generate a new population.
+ *
+ * Given the list of breeding candidates selected, the probability of
+ * crossover p_cross, and the probability of p_muta, breeds a new
+ * solution population.
+ */
+GList *
+ti_repopulate (GList *selected, double p_cross, double p_muta)
+{
+  GList *unpaired = g_list_copy (selected);
+  GList *new_pop = NULL;
+  GList *iter = NULL;
+  int n = g_list_length (unpaired);
+
+  /* N.b. through this function we ref++ stuff when it's placed into
+   * new_pop. */
+
+  /* Create random pairings, and decide whether or not to cross
+   * them. */
+  while (unpaired != NULL) {
+    TiTriangleList *a, *b;
+    GList *link;
+
+    /* Choose a random element */
+    link = g_list_nth (unpaired, g_random_int_range (0, n--));
+    a = link->data;
+    unpaired = g_list_delete_link (unpaired, link);
+
+    /* Handle the case that selected has an odd number of elements */
+    if (unpaired == NULL) {
+      ti_triangle_list_ref (a);
+      new_pop = g_list_prepend (new_pop, a);
+      break;
+    }
+
+    /* Choose another random element */
+    link = g_list_nth (unpaired, g_random_int_range (0, n--));
+    b = link->data;
+    unpaired = g_list_delete_link (unpaired, link);
+
+    /* Decide whether or not to cross the pair */
+    if (g_random_double () < p_cross) {
+      TiTriangleList *c1, *c2;
+      ti_crossover (a, b, &c1, &c2);
+      new_pop = g_list_prepend (new_pop, c1);
+      new_pop = g_list_prepend (new_pop, c2);
+    } else {
+      ti_triangle_list_ref (a);
+      new_pop = g_list_prepend (new_pop, a);
+      ti_triangle_list_ref (b);
+      new_pop = g_list_prepend (new_pop, b);
+    }
+  }
+
+  /* Mutate */
+  for (iter = new_pop; iter != NULL; iter = g_list_next (iter)) {
+    TiTriangleList *lst = (TiTriangleList *) iter->data;
+    ti_mutate_list (lst, p_muta);
+  }
+
+  return new_pop;
+}

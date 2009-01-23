@@ -51,6 +51,7 @@ void ti_crossover (TiTriangleList *parentA, TiTriangleList *parentB,
                    TiTriangleList **childA, TiTriangleList **childB);
 TiTriangle *ti_mutate (TiTriangle *x, double prob);
 void ti_mutate_list (TiTriangleList *lst, double prob);
+GList *ti_repopulate (GList *selected, double p_cross, double p_muta);
 
 GList *ti_archive_update(GList *archive, TiTriangleList *cand, double obj,
                          double dis, double sim, int max_len, int *success);
