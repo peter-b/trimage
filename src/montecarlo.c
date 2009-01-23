@@ -27,7 +27,7 @@ main (int argc, char **argv)
     trial = ti_triangle_list_new_random (50);
     ti_render_clear (cr);
     ti_render_list (cr, trial);
-    double obj = objective (reference, render);
+    double obj = ti_objective (reference, render);
     int success;
 
     // Archive

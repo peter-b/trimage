@@ -14,7 +14,7 @@ main (int argc, char **argv)
   cairo_surface_t* b =
     cairo_image_surface_create_from_png (argv[2]);
 
-  double dist = objective (a, b);
+  double dist = ti_objective (a, b);
 
   printf("Distance: %e\n", dist);
   return 0;

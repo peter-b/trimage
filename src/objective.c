@@ -24,7 +24,7 @@ static inline int pixel_dist (unsigned char* p1, unsigned char* p2)
  * pixel.
  */
 double
-objective (cairo_surface_t *reference,
+ti_objective (cairo_surface_t *reference,
            cairo_surface_t *trial)
 {
   int ref_stride =

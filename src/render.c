@@ -1,4 +1,5 @@
 #include "trimage.h"
+#include <cairo-svg.h>
 
 /* Render a single triangle.
  *

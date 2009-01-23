@@ -24,9 +24,9 @@ typedef struct {
   double obj;
 } TiArchiveEntry;
 
-TiTriangle *triangle_new ();
-TiTriangle *triangle_new_random ();
-TiTriangle *triangle_copy (const TiTriangle *x);
+TiTriangle *ti_triangle_new ();
+TiTriangle *ti_triangle_new_random ();
+TiTriangle *ti_triangle_copy (const TiTriangle *x);
 void ti_triangle_ref (TiTriangle *x);
 void ti_triangle_unref (TiTriangle *x);
 
@@ -45,7 +45,7 @@ void ti_render_to_svg (const char *filename, TiTriangleList *lst,
 void ti_render_to_png (const char *filename, TiTriangleList *lst,
                                  int width, int height);
 
-double objective (cairo_surface_t *reference, cairo_surface_t *trial);
+double ti_objective (cairo_surface_t *reference, cairo_surface_t *trial);
 
 void ti_crossover (TiTriangleList *parentA, TiTriangleList *parentB,
                    TiTriangleList **childA, TiTriangleList **childB);
