@@ -34,5 +34,7 @@ double objective (cairo_surface_t *reference, cairo_surface_t *trial);
 
 void ti_crossover (GList *parentA, GList *parentB,
                    GList **childA, GList **childB);
+TiTriangle *ti_mutate (TiTriangle *x, double prob);
+void ti_mutate_list (GList *lst, double prob);
 
 #endif /* !_TRIMAGE_H_ */
